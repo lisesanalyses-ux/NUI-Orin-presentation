@@ -53,6 +53,18 @@
     </div>
     <iframe id="m-f" class="absolute inset-0 w-full h-full border-none" src="about:blank"></iframe>
     <script>
+// Detekce mobilního zařízení
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    document.body.innerHTML = `
+        <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px; background:#0c060f; color:#d4af37; font-family:'Cinzel', serif;">
+            <h1 style="font-size:1.5rem; letter-spacing:0.5em; margin-bottom:20px;">ACCESS DENIED</h1>
+            <p style="font-size:0.8rem; letter-spacing:0.2em; line-height:2; opacity:0.6;">
+                THE ORACLE REQUIRES A TERMINAL WITH MOTION SENSING CAPABILITIES.<br>
+                PLEASE RETURN TO A DESKTOP ENVIRONMENT TO COMMENCE RITUAL.
+            </p>
+        </div>`;
+    throw new Error("Mobile access blocked."); 
+}
         const _ = (x) => document.getElementById(x);
         let _a, _o, _g, _p = 0, _v = false;
         function _s() { _a = new (window.AudioContext || window.webkitAudioContext)(); _o = _a.createOscillator(); _g = _a.createGain(); _o.type = 'sine'; _o.frequency.setValueAtTime(110, _a.currentTime); _g.gain.setValueAtTime(0, _a.currentTime); _o.connect(_g); _g.connect(_a.destination); _o.start(); }
@@ -91,4 +103,5 @@
         })();
     </script>
 </body>
+
 </html>
