@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>The Oracle | Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --g: #d4af37; --i: #fdf5e6; --d: #0c060f; }
+        body { background: var(--d); color: var(--i); font-family: 'Cinzel', serif; overflow: hidden; margin: 0; }
+        .p-bg { position: absolute; inset: 0; opacity: 0.05; pointer-events: none; background-image: url('https://www.transparenttextures.com/patterns/sacred-geometry.png'); }
+        .m-c { width: 100px; height: 100px; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; }
+        .m-l { position: absolute; border: 1px solid var(--g); opacity: 0.3; }
+        .m-1 { width: 40px; height: 40px; animation: r1 8s infinite linear; }
+        .m-2 { width: 40px; height: 40px; transform: rotate(45deg); animation: r2 8s infinite linear; }
+        @keyframes r1 { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes r2 { 0% { transform: rotate(45deg); } 100% { transform: rotate(405deg); } }
+        .i-b { border-top: 1px solid rgba(212, 175, 55, 0.2); padding: 40px 20px; display: flex; gap: 40px; margin-bottom: 3rem; }
+        .i-s { text-align: center; width: 140px; }
+        .i-c { width: 45px; height: 45px; border: 1px solid var(--g); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--g); }
+        .p-b { padding: 12px 6px; border: 1px solid rgba(212, 175, 55, 0.2); background: rgba(18, 10, 22, 0.9); text-align: center; width: 200px; position: relative; cursor: pointer; transition: all 0.5s; z-index: 100; }
+        .a-t { border-color: var(--g); box-shadow: 0 0 25px rgba(212, 175, 55, 0.15); }
+        .l-c { height: 1px; background: rgba(212, 175, 55, 0.1); width: 60%; margin: 8px auto 0; overflow: hidden; }
+        .l-f { height: 100%; width: 0%; background: var(--g); }
+        #cur { position: absolute; width: 44px; height: 44px; border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 50%; transform: translate(-50%, -50%); display: none; z-index: 500; pointer-events: none; overflow: hidden; }
+        #i-f { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(212, 175, 55, 0.4); }
+    </style>
+</head>
+<body>
+    <div class="p-bg"></div>
+    <video id="v-in" style="display:none" playsinline></video>
+    <div id="bt" class="absolute inset-0 flex flex-col items-center justify-center z-[1000] bg-[#0c060f] transition-opacity duration-1000">
+        <div class="m-c"><div class="m-l m-1"></div><div class="m-l m-2"></div></div>
+        <h1 class="text-2xl mb-4 tracking-[1em] text-[#d4af37] opacity-80 uppercase">The Oracle</h1>
+        <p id="tw" class="text-[7px] tracking-[0.5em] mb-12 opacity-40 uppercase min-h-[10px]"></p>
+        <div class="i-b">
+            <div class="i-s"><div class="i-c">Ⅰ</div><h3 class="text-[9px] tracking-[0.4em] mb-1">REVEAL</h3><p class="text-[7px] opacity-40 uppercase">Enable motion<br>sensor</p></div>
+            <div class="i-s"><div class="i-c">Ⅱ</div><h3 class="text-[9px] tracking-[0.4em] mb-1">GUIDE</h3><p class="text-[7px] opacity-40 uppercase">Aim at the<br>sanctum</p></div>
+            <div class="i-s"><div class="i-c">Ⅲ</div><h3 class="text-[9px] tracking-[0.4em] mb-1">IGNITE</h3><p class="text-[7px] opacity-40 uppercase">Hold to open<br>portal</p></div>
+        </div>
+        <button id="s-b" class="px-16 py-4 border border-[#d4af37]/30 text-[#d4af37] text-[9px] tracking-[0.6em] hover:bg-[#d4af37] hover:text-black transition-all duration-700 uppercase">Commence Ritual</button>
+    </div>
+    <div id="ui">
+        <div id="cur"><div id="i-f"></div></div>
+        <div id="b-k" class="p-b absolute top-10 left-10 hidden" data-url="reset"><span class="text-[9px] tracking-[0.3em]">DEPART</span><div class="l-c"><div class="l-f"></div></div></div>
+        <div id="n-m" class="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-10 transition-opacity duration-500">
+            <div class="p-b" data-url="AuraManifest.html"><h2 class="text-[10px] font-bold tracking-[0.4em]">AURA</h2><div class="l-c"><div class="l-f"></div></div></div>
+            <div class="p-b" data-url="inception.html"><h2 class="text-[10px] font-bold tracking-[0.4em]">ARCHITECT</h2><div class="l-c"><div class="l-f"></div></div></div>
+            <div class="p-b" data-url="Solar.html"><h2 class="text-[10px] font-bold tracking-[0.4em]">SOLARIS</h2><div class="l-c"><div class="l-f"></div></div></div>
+        </div>
+    </div>
+    <iframe id="m-f" class="absolute inset-0 w-full h-full border-none" src="about:blank"></iframe>
+    <script>
+        const _ = (x) => document.getElementById(x);
+        let _a, _o, _g, _p = 0, _v = false;
+        function _s() { _a = new (window.AudioContext || window.webkitAudioContext)(); _o = _a.createOscillator(); _g = _a.createGain(); _o.type = 'sine'; _o.frequency.setValueAtTime(110, _a.currentTime); _g.gain.setValueAtTime(0, _a.currentTime); _o.connect(_g); _g.connect(_a.destination); _o.start(); }
+        (function() {
+            const vi = _('v-in'), fr = _('m-f'), cu = _('cur'), fl = _('i-f');
+            function onResults(r) {
+                if (!r.multiHandLandmarks || !r.multiHandLandmarks[0]) { cu.style.display = 'none'; _p = 0; _r(); if(_g) _g.gain.setTargetAtTime(0, _a.currentTime, 0.1); return; }
+                cu.style.display = 'block'; const h = r.multiHandLandmarks[0];
+                const x = (1 - h[8].x) * window.innerWidth, y = h[8].y * window.innerHeight;
+                cu.style.left = x + 'px'; cu.style.top = y + 'px';
+                if (_v) { fr.contentWindow.postMessage({ type: 'HAND_MOVE', x, y, landmarks: h, handedness: r.multiHandedness[0].label }, '*'); }
+                let c = null; const t = _v ? [_('b-k')] : Array.from(document.querySelectorAll('.p-b'));
+                t.forEach(b => {
+                    const rct = b.getBoundingClientRect();
+                    if (x > rct.left && x < rct.right && y > rct.top && y < rct.bottom) { c = b; b.classList.add('a-t'); }
+                    else { b.classList.remove('a-t'); const f = b.querySelector('.l-f'); if (f) f.style.width = '0%'; }
+                });
+                if (c) {
+                    _p += 1.8; fl.style.height = _p + '%';
+                    const bf = c.querySelector('.l-f'); if(bf) bf.style.width = _p + '%';
+                    if(_g) { _g.gain.setTargetAtTime(0.1, _a.currentTime, 0.1); _o.frequency.setTargetAtTime(110 + _p, _a.currentTime, 0.1); }
+                    if (_p >= 100) {
+                        const u = c.getAttribute('data-url');
+                        if (u === 'reset') { _v = false; fr.src = 'about:blank'; _('n-m').style.opacity = '1'; _('b-k').style.display = 'none'; }
+                        else { _v = true; fr.src = u; _('n-m').style.opacity = '0'; setTimeout(() => _('b-k').style.display = 'block', 600); }
+                        _p = 0; _r();
+                    }
+                } else { _p = 0; fl.style.height = '0%'; if(_g) _g.gain.setTargetAtTime(0.02, _a.currentTime, 0.1); }
+            }
+            function _r() { document.querySelectorAll('.p-b').forEach(b => { b.classList.remove('a-t'); const f = b.querySelector('.l-f'); if (f) f.style.width = '0%'; }); fl.style.height = '0%'; }
+            const hnds = new Hands({locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});
+            hnds.setOptions({maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6});
+            hnds.onResults(onResults);
+            const cam = new Camera(vi, {onFrame: async () => { await hnds.send({image: vi}); }, width: 1280, height: 720});
+            _('s-b').onclick = () => { _s(); _('bt').style.opacity = '0'; setTimeout(() => { _('bt').style.display = 'none'; cam.start(); }, 1000); };
+        })();
+    </script>
+</body>
+</html>
