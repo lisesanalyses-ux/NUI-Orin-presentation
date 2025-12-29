@@ -108,8 +108,30 @@
             hnds.setOptions({maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6});
             hnds.onResults(onResults);
             const cam = new Camera(vi, {onFrame: async () => { await hnds.send({image: vi}); }, width: 1280, height: 720});
-            _('s-b').onclick = () => { _s(); _('bt').style.opacity = '0'; setTimeout(() => { _('bt').style.display = 'none'; cam.start(); }, 1000); };
+            _('s-b').onclick = async () => { 
+    try {
+        // 1. Spustíme zvukový rituál
+        _s(); 
+        
+        // 2. Požádáme o přístup ke kameře (tohle v kódu chybělo)
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        _('v-in').srcObject = stream;
+        
+        // 3. Skryjeme úvodní obrazovku
+        _('bt').style.opacity = '0'; 
+        
+        setTimeout(() => { 
+            _('bt').style.display = 'none'; 
+            // 4. Nastartujeme sledování rukou
+            cam.start(); 
+        }, 1000);
+    } catch (err) {
+        alert("The Oracle requires a camera to function. Please enable it.");
+        console.error(err);
+    }
+};
         })();
     </script>
 </body>
 </html>
+
