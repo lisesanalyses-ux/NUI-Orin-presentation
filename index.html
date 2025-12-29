@@ -1,97 +1,360 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>The Oracle | Terminal</title>
+    <title>The Oracle Gateway | Sacred Geometry</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --g: #d4af37; --i: #fdf5e6; --d: #0c060f; }
-        body { background: var(--d); color: var(--i); font-family: 'Cinzel', serif; overflow: hidden; margin: 0; }
-        .p-bg { position: absolute; inset: 0; opacity: 0.05; pointer-events: none; background-image: url('https://www.transparenttextures.com/patterns/sacred-geometry.png'); }
-        .m-c { width: 100px; height: 100px; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; }
-        .m-l { position: absolute; border: 1px solid var(--g); opacity: 0.3; }
-        .m-1 { width: 40px; height: 40px; animation: r1 8s infinite linear; }
-        .m-2 { width: 40px; height: 40px; transform: rotate(45deg); animation: r2 8s infinite linear; }
-        @keyframes r1 { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes r2 { 0% { transform: rotate(45deg); } 100% { transform: rotate(405deg); } }
-        .i-b { border-top: 1px solid rgba(212, 175, 55, 0.2); padding: 40px 20px; display: flex; gap: 40px; margin-bottom: 3rem; }
-        .i-s { text-align: center; width: 140px; }
-        .i-c { width: 45px; height: 45px; border: 1px solid var(--g); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--g); }
-        .p-b { padding: 12px 6px; border: 1px solid rgba(212, 175, 55, 0.2); background: rgba(18, 10, 22, 0.9); text-align: center; width: 200px; position: relative; cursor: pointer; transition: all 0.5s; z-index: 100; }
-        .a-t { border-color: var(--g); box-shadow: 0 0 25px rgba(212, 175, 55, 0.15); }
-        .l-c { height: 1px; background: rgba(212, 175, 55, 0.1); width: 60%; margin: 8px auto 0; overflow: hidden; }
-        .l-f { height: 100%; width: 0%; background: var(--g); }
-        #cur { position: absolute; width: 44px; height: 44px; border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 50%; transform: translate(-50%, -50%); display: none; z-index: 500; pointer-events: none; overflow: hidden; }
-        #i-f { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(212, 175, 55, 0.4); }
+        :root { --gold: #d4af37; --ivory: #fdf5e6; --deep: #0c060f; }
+        body { background: var(--deep); color: var(--ivory); font-family: 'Cinzel', serif; overflow: hidden; margin: 0; }
+        
+        .bg-pattern {
+            position: absolute; inset: 0; opacity: 0.07; pointer-events: none;
+            background-image: url('https://www.transparenttextures.com/patterns/sacred-geometry.png');
+        }
+
+        /* --- MANDALA ANIMATION --- */
+        .mandala-container {
+            width: 100px; height: 100px; position: relative;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .mandala-layer {
+            position: absolute; border: 1px solid var(--gold);
+            opacity: 0.3;
+        }
+        .m-sq-1 { 
+            width: 40px; height: 40px; 
+            animation: rotate-burst 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        .m-sq-2 { 
+            width: 40px; height: 40px; transform: rotate(45deg); 
+            animation: rotate-burst-offset 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        .m-cir-1 { 
+            width: 70px; height: 70px; border-radius: 50%; 
+            animation: pulse-glow 4s ease-in-out infinite; 
+        }
+
+        @keyframes rotate-burst {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(360deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes rotate-burst-offset {
+            0% { transform: rotate(45deg); }
+            20% { transform: rotate(405deg); }
+            100% { transform: rotate(405deg); }
+        }
+        @keyframes pulse-glow { 50% { opacity: 0.6; transform: scale(1.1); } }
+
+        /* --- UI COMPONENTS --- */
+        .instruction-box {
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 40px 20px; display: flex; gap: 40px; margin-bottom: 3rem;
+        }
+        .instruction-step { text-align: center; width: 140px; }
+        .icon-circle {
+            width: 45px; height: 45px; border: 1px solid var(--gold); border-radius: 50%;
+            margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: var(--gold);
+        }
+
+        .portal-btn { 
+            padding: 12px 6px; border: 1px solid rgba(212, 175, 55, 0.2); 
+            background: rgba(18, 10, 22, 0.95); text-align: center; width: 200px;
+            transition: transform 0.2s cubic-bezier(0.33, 1, 0.68, 1), border 0.6s, box-shadow 0.6s; 
+            position: relative;
+        }
+        .portal-btn::before, .portal-btn::after {
+            content: '✧'; position: absolute; font-size: 8px; color: var(--gold); opacity: 0.4;
+        }
+        .portal-btn::before { top: 2px; left: 4px; }
+        .portal-btn::after { bottom: 2px; right: 4px; }
+
+        .active-target { 
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(212, 175, 55, 0.1); 
+        }
+
+        .loading-bar-container { height: 1px; background: rgba(212, 175, 55, 0.1); width: 60%; margin: 8px auto 0; position: relative; }
+        .loading-fill { height: 100%; width: 0%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+
+        .flash-active { animation: bloom-white 0.5s ease-out; }
+        @keyframes bloom-white {
+            0% { filter: brightness(1) blur(0px); }
+            50% { filter: brightness(4) blur(1px); }
+            100% { filter: brightness(1) blur(0px); }
+        }
+
+        .ripple {
+            position: absolute; border: 1px solid var(--gold); border-radius: 50%;
+            pointer-events: none; animation: ripple-out 0.8s ease-out forwards;
+            transform: translate(-50%, -50%); z-index: 50;
+        }
+        @keyframes ripple-out {
+            0% { width: 0; height: 0; opacity: 1; }
+            100% { width: 450px; height: 450px; opacity: 0; }
+        }
+
+        #cursor-charge {
+            position: absolute; width: 48px; height: 48px;
+            border: 1px solid var(--gold); border-radius: 50%;
+            transform: translate(-50%, -50%); display: none;
+            z-index: 200; pointer-events: none;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+        #charge-fill {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 0%;
+            background: rgba(212, 175, 55, 0.4);
+        }
     </style>
 </head>
 <body>
-    <div class="p-bg"></div>
-    <video id="v-in" style="display:none" playsinline></video>
-    <div id="bt" class="absolute inset-0 flex flex-col items-center justify-center z-[1000] bg-[#0c060f] transition-opacity duration-1000">
-        <div class="m-c"><div class="m-l m-1"></div><div class="m-l m-2"></div></div>
-        <h1 class="text-2xl mb-4 tracking-[1em] text-[#d4af37] opacity-80 uppercase">The Oracle</h1>
-        <p id="tw" class="text-[7px] tracking-[0.5em] mb-12 opacity-40 uppercase min-h-[10px]"></p>
-        <div class="i-b">
-            <div class="i-s"><div class="i-c">Ⅰ</div><h3 class="text-[9px] tracking-[0.4em] mb-1">REVEAL</h3><p class="text-[7px] opacity-40 uppercase">Enable motion<br>sensor</p></div>
-            <div class="i-s"><div class="i-c">Ⅱ</div><h3 class="text-[9px] tracking-[0.4em] mb-1">GUIDE</h3><p class="text-[7px] opacity-40 uppercase">Aim at the<br>sanctum</p></div>
-            <div class="i-s"><div class="i-c">Ⅲ</div><h3 class="text-[9px] tracking-[0.4em] mb-1">IGNITE</h3><p class="text-[7px] opacity-40 uppercase">Hold to open<br>portal</p></div>
+    <div class="bg-pattern"></div>
+    <video id="v-input" style="display:none" playsinline></video>
+
+    <div id="boot" class="absolute inset-0 flex flex-col items-center justify-center z-[300] bg-[#0c060f] transition-opacity duration-1000">
+        <div class="mandala-container">
+            <div class="mandala-layer m-cir-1"></div>
+            <div class="mandala-layer m-sq-1"></div>
+            <div class="mandala-layer m-sq-2"></div>
         </div>
-        <button id="s-b" class="px-16 py-4 border border-[#d4af37]/30 text-[#d4af37] text-[9px] tracking-[0.6em] hover:bg-[#d4af37] hover:text-black transition-all duration-700 uppercase">Commence Ritual</button>
+        
+        <h1 class="text-2xl mb-12 tracking-[1em] text-[#d4af37] opacity-80 uppercase">The Oracle</h1>
+        
+        <div class="instruction-box">
+            <div class="instruction-step">
+                <div class="icon-circle">Ⅰ</div>
+                <h3 class="text-[10px] tracking-[0.4em] mb-1">REVEAL</h3>
+                <p class="text-[8px] opacity-40 leading-relaxed uppercase">Enable motion<br>tracking sensor</p>
+            </div>
+            <div class="instruction-step">
+                <div class="icon-circle">Ⅱ</div>
+                <h3 class="text-[10px] tracking-[0.4em] mb-1">GUIDE</h3>
+                <p class="text-[8px] opacity-40 leading-relaxed uppercase">Move your finger<br>to aim the light</p>
+            </div>
+            <div class="instruction-step">
+                <div class="icon-circle">Ⅲ</div>
+                <h3 class="text-[10px] tracking-[0.4em] mb-1">IGNITE</h3>
+                <p class="text-[8px] opacity-40 leading-relaxed uppercase">Hold position to<br>open the portal</p>
+            </div>
+        </div>
+
+        <div id="mobile-warning" class="hidden text-center mb-6 px-4">
+            <p class="text-red-500 text-[10px] tracking-[0.2em] uppercase">
+                ! Mobile Device Detected !
+            </p>
+            <p class="text-[8px] opacity-60 mt-2 uppercase">
+                This ritual requires high-performance hand tracking.<br>
+                Please use a Desktop Chrome browser for the full experience.
+            </p>
+        </div>
+
+        <button id="start-btn" class="px-14 py-4 border border-[#d4af37]/40 text-[#d4af37] text-[10px] tracking-[0.6em] hover:bg-[#d4af37] hover:text-black transition-all duration-1000 uppercase">
+            Commence Ritual
+        </button>
     </div>
-    <div id="ui">
-        <div id="cur"><div id="i-f"></div></div>
-        <div id="b-k" class="p-b absolute top-10 left-10 hidden" data-url="reset"><span class="text-[9px] tracking-[0.3em]">DEPART</span><div class="l-c"><div class="l-f"></div></div></div>
-        <div id="n-m" class="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-10 transition-opacity duration-500">
-            <div class="p-b" data-url="AuraManifest.html"><h2 class="text-[10px] font-bold tracking-[0.4em]">AURA</h2><div class="l-c"><div class="l-f"></div></div></div>
-            <div class="p-b" data-url="inception.html"><h2 class="text-[10px] font-bold tracking-[0.4em]">ARCHITECT</h2><div class="l-c"><div class="l-f"></div></div></div>
-            <div class="p-b" data-url="Solar.html"><h2 class="text-[10px] font-bold tracking-[0.4em]">SOLARIS</h2><div class="l-c"><div class="l-f"></div></div></div>
+
+    <div id="ui-layer">
+        <div id="cursor-charge"><div id="charge-fill"></div></div>
+        
+        <div id="btn-back" class="portal-btn absolute top-10 left-10 hidden" style="z-index: 100;">
+            <span class="text-[9px] tracking-[0.3em]">DEPART</span>
+            <div class="loading-bar-container"><div id="load-back" class="loading-fill"></div></div>
+        </div>
+
+        <div id="nav-menu" class="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-10 transition-opacity duration-500">
+            <div id="btn-auryn" class="portal-btn">
+                <h2 class="text-[10px] font-bold tracking-[0.4em]">AURA</h2>
+                <div class="loading-bar-container"><div id="load-1" class="loading-fill"></div></div>
+            </div>
+            <div id="btn-inception" class="portal-btn">
+                <h2 class="text-[10px] font-bold tracking-[0.4em]">ARCHITECT</h2>
+                <div class="loading-bar-container"><div id="load-inception" class="loading-fill"></div></div>
+            </div>
+            <div id="btn-falko" class="portal-btn">
+                <h2 class="text-[10px] font-bold tracking-[0.4em]">SOLARIS</h2>
+                <div class="loading-bar-container"><div id="load-2" class="loading-fill"></div></div>
+            </div>
         </div>
     </div>
-    <iframe id="m-f" class="absolute inset-0 w-full h-full border-none" src="about:blank"></iframe>
+
+    <iframe id="main-frame" class="absolute inset-0 w-full h-full border-none z-1" src="about:blank"></iframe>
+
     <script>
-}
-        const _ = (x) => document.getElementById(x);
-        let _a, _o, _g, _p = 0, _v = false;
-        function _s() { _a = new (window.AudioContext || window.webkitAudioContext)(); _o = _a.createOscillator(); _g = _a.createGain(); _o.type = 'sine'; _o.frequency.setValueAtTime(110, _a.currentTime); _g.gain.setValueAtTime(0, _a.currentTime); _o.connect(_g); _g.connect(_a.destination); _o.start(); }
-        (function() {
-            const vi = _('v-in'), fr = _('m-f'), cu = _('cur'), fl = _('i-f');
-            function onResults(r) {
-                if (!r.multiHandLandmarks || !r.multiHandLandmarks[0]) { cu.style.display = 'none'; _p = 0; _r(); if(_g) _g.gain.setTargetAtTime(0, _a.currentTime, 0.1); return; }
-                cu.style.display = 'block'; const h = r.multiHandLandmarks[0];
-                const x = (1 - h[8].x) * window.innerWidth, y = h[8].y * window.innerHeight;
-                cu.style.left = x + 'px'; cu.style.top = y + 'px';
-                if (_v) { fr.contentWindow.postMessage({ type: 'HAND_MOVE', x, y, landmarks: h, handedness: r.multiHandedness[0].label }, '*'); }
-                let c = null; const t = _v ? [_('b-k')] : Array.from(document.querySelectorAll('.p-b'));
-                t.forEach(b => {
-                    const rct = b.getBoundingClientRect();
-                    if (x > rct.left && x < rct.right && y > rct.top && y < rct.bottom) { c = b; b.classList.add('a-t'); }
-                    else { b.classList.remove('a-t'); const f = b.querySelector('.l-f'); if (f) f.style.width = '0%'; }
-                });
-                if (c) {
-                    _p += 1.8; fl.style.height = _p + '%';
-                    const bf = c.querySelector('.l-f'); if(bf) bf.style.width = _p + '%';
-                    if(_g) { _g.gain.setTargetAtTime(0.1, _a.currentTime, 0.1); _o.frequency.setTargetAtTime(110 + _p, _a.currentTime, 0.1); }
-                    if (_p >= 100) {
-                        const u = c.getAttribute('data-url');
-                        if (u === 'reset') { _v = false; fr.src = 'about:blank'; _('n-m').style.opacity = '1'; _('b-k').style.display = 'none'; }
-                        else { _v = true; fr.src = u; _('n-m').style.opacity = '0'; setTimeout(() => _('b-k').style.display = 'block', 600); }
-                        _p = 0; _r();
-                    }
-                } else { _p = 0; fl.style.height = '0%'; if(_g) _g.gain.setTargetAtTime(0.02, _a.currentTime, 0.1); }
+        const frame = document.getElementById('main-frame');
+        const cursor = document.getElementById('cursor-charge');
+        const charge = document.getElementById('charge-fill');
+        let progress = 0; 
+        let isProjectActive = false;
+        let lastHitId = null;
+        let audioCtx;
+
+        async function checkRequirements() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                document.getElementById('mobile-warning').classList.remove('hidden');
+                document.getElementById('start-btn').style.opacity = '0.3';
+                document.getElementById('start-btn').innerText = 'Incompatible Device';
+                document.getElementById('start-btn').disabled = true;
+                return false;
             }
-            function _r() { document.querySelectorAll('.p-b').forEach(b => { b.classList.remove('a-t'); const f = b.querySelector('.l-f'); if (f) f.style.width = '0%'; }); fl.style.height = '0%'; }
-            const hnds = new Hands({locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});
-            hnds.setOptions({maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6});
-            hnds.onResults(onResults);
-            const cam = new Camera(vi, {onFrame: async () => { await hnds.send({image: vi}); }, width: 1280, height: 720});
-            _('s-b').onclick = () => { _s(); _('bt').style.opacity = '0'; setTimeout(() => { _('bt').style.display = 'none'; cam.start(); }, 1000); };
-        })();
+            return true;
+        }
+
+        function playSound(freq, vol, duration, type = 'sine') {
+            if(!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function triggerEffects(el) {
+            el.classList.add('flash-active');
+            const rect = el.getBoundingClientRect();
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = (rect.left + rect.width / 2) + 'px';
+            ripple.style.top = (rect.top + rect.height / 2) + 'px';
+            document.body.appendChild(ripple);
+            setTimeout(() => { el.classList.remove('flash-active'); ripple.remove(); }, 800);
+        }
+
+        function fill(id, action) {
+            progress += 1.8;
+            const loadBar = document.getElementById('load-' + id);
+            if(loadBar) loadBar.style.width = progress + '%';
+            charge.style.height = progress + '%';
+            if (progress >= 100) { action(); progress = 0; }
+        }
+
+        function load(url) {
+            isProjectActive = true; frame.src = url;
+            document.getElementById('nav-menu').style.opacity = '0';
+            setTimeout(() => { if(isProjectActive) document.getElementById('nav-menu').style.display = 'none'; }, 500);
+            document.getElementById('btn-back').style.display = 'block';
+        }
+
+        function reset() {
+            isProjectActive = false; frame.src = 'about:blank';
+            document.getElementById('nav-menu').style.display = 'flex';
+            setTimeout(() => document.getElementById('nav-menu').style.opacity = '1', 100);
+            document.getElementById('btn-back').style.display = 'none';
+        }
+
+        function resetProgress() {
+            progress = 0; charge.style.height = '0%';
+            ['load-1', 'load-2', 'load-inception', 'load-back'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.style.width = '0%';
+            });
+        }
+
+        // --- UPDATED: Magnetic logic turns OFF during loading ---
+        function checkHit(x, y, id) {
+            const el = document.getElementById(id); 
+            if (!el || el.offsetParent === null) return false;
+            
+            const r = el.getBoundingClientRect();
+            const centerX = r.left + r.width / 2;
+            const centerY = r.top + r.height / 2;
+            const dist = Math.hypot(x - centerX, y - centerY);
+            const isInside = (x > r.left && x < r.right && y > r.top && y < r.bottom);
+
+            // ÚPRAVA: Magnetismus funguje jen když NENÍ aktivní nabíjení (progress === 0)
+            if (dist < 180 && !isProjectActive && progress === 0) {
+                const pullX = (x - centerX) * 0.35;
+                const pullY = (y - centerY) * 0.35;
+                el.style.transform = `translate(${pullX}px, ${pullY}px)`;
+            } else { 
+                // Pokud se nabíjí nebo je prst daleko, tlačítko je v klidu
+                el.style.transform = 'translate(0, 0)'; 
+            }
+
+            if(isInside) {
+                el.classList.add('active-target');
+            } else {
+                el.classList.remove('active-target');
+            }
+            
+            return isInside;
+        }
+
+        // --- UPDATED: onResults for exclusivity and flow ---
+        function onResults(results) {
+            if (results.multiHandLandmarks && results.multiHandLandmarks[0]) {
+                const hand = results.multiHandLandmarks[0];
+                const x = (1 - hand[8].x) * window.innerWidth;
+                const y = hand[8].y * window.innerHeight;
+                
+                cursor.style.display = 'block'; 
+                cursor.style.left = x + 'px'; 
+                cursor.style.top = y + 'px';
+                
+                if(isProjectActive) {
+                    frame.contentWindow.postMessage({ type: 'HAND_MOVE', x, y, landmarks: hand }, '*');
+                }
+
+                let currentHit = null;
+                if (!isProjectActive) {
+                    if (checkHit(x, y, 'btn-auryn')) currentHit = 'btn-auryn';
+                    else if (checkHit(x, y, 'btn-inception')) currentHit = 'btn-inception';
+                    else if (checkHit(x, y, 'btn-falko')) currentHit = 'btn-falko';
+                } else {
+                    if (checkHit(x, y, 'btn-back')) currentHit = 'btn-back';
+                }
+
+                if (currentHit) {
+                    if (lastHitId !== currentHit) {
+                        playSound(880, 0.05, 0.1); 
+                        lastHitId = currentHit;
+                        progress = 0; // Reset progress when switching buttons
+                    }
+                    
+                    const barId = currentHit === 'btn-auryn' ? '1' : (currentHit === 'btn-falko' ? '2' : (currentHit === 'btn-back' ? 'back' : 'inception'));
+                    const url = currentHit === 'btn-auryn' ? 'AuraManifest.html' : (currentHit === 'btn-falko' ? 'Solar.html' : (currentHit === 'btn-back' ? 'reset' : 'Inception.html'));
+                    
+                    fill(barId, () => {
+                        playSound(110, 0.3, 0.6, 'triangle');
+                        triggerEffects(document.getElementById(currentHit));
+                        setTimeout(() => url === 'reset' ? reset() : load(url), 300);
+                    });
+                } else {
+                    lastHitId = null;
+                    resetProgress();
+                    document.querySelectorAll('.portal-btn').forEach(btn => btn.style.transform = 'translate(0,0)');
+                }
+            } else {
+                cursor.style.display = 'none';
+                resetProgress();
+            }
+        }
+
+        const hands = new Hands({locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6 });
+        hands.onResults(onResults);
+        const videoElement = document.getElementById('v-input');
+        const camera = new Camera(videoElement, { onFrame: async () => { await hands.send({image: videoElement}); }, width: 1280, height: 720 });
+        
+        document.getElementById('start-btn').onclick = async () => {
+            const ok = await checkRequirements();
+            if (!ok) return;
+
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            document.getElementById('boot').style.opacity = '0';
+            setTimeout(() => document.getElementById('boot').style.display = 'none', 1000);
+            camera.start();
+        };
+
+        checkRequirements();
     </script>
 </body>
-
 </html>
-
