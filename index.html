@@ -28,38 +28,10 @@
         #i-f { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(212, 175, 55, 0.4); }
     </style>
 </head>
-<body><body>
-    <div id="mobile-notice" class="fixed inset-0 bg-[#0c060f] z-[10000] flex flex-col items-center justify-center p-6 text-center md:hidden">
-        <div class="m-c">
-            <div class="m-l m-1"></div>
-            <div class="m-l m-2"></div>
-        </div>
-        
-        <div class="relative w-full max-w-xs mb-6">
-            <img src="preview.jpg?v=20" alt="The Oracle Experience" 
-                 class="w-full border border-[#d4af37]/30 shadow-[0_0_20px_rgba(212,175,55,0.1)]"
-                 onerror="this.style.display='none'; document.getElementById('img-fallback').classList.remove('hidden');">
-            <div id="img-fallback" class="hidden w-full aspect-video border border-[#d4af37]/20 flex items-center justify-center text-[#d4af37] text-[10px] tracking-widest uppercase">
-                Image Not Found
-            </div>
-        </div>
-        
-        <h2 class="text-[#d4af37] text-lg mb-2 tracking-[0.5em] uppercase font-bold">The Oracle</h2>
-        <p class="text-[#fdf5e6] opacity-60 text-[10px] tracking-[0.2em] leading-relaxed mb-8 max-w-sm">
-            DESKTOP EXPERIENCE REQUIRED<br><br>
-            To engage with the Oracle's NUI and gesture-tracking, please switch to a desktop device with a webcam.
-        </p>
-        
-        <a href="https://auraadmin.online" class="text-[#d4af37] text-[9px] tracking-[0.4em] border border-[#d4af37]/40 px-8 py-3 uppercase hover:bg-[#d4af37] hover:text-black transition-all">
-            Enter the Sanctum
-        </a>
-    </div>
-
+<body>
     <div class="p-bg"></div>
-    
     <video id="v-in" style="display:none" playsinline></video>
-    
-    <div id="bt" class="hidden md:flex absolute inset-0 flex-col items-center justify-center z-[1000] bg-[#0c060f] transition-opacity duration-1000">
+    <div id="bt" class="absolute inset-0 flex flex-col items-center justify-center z-[1000] bg-[#0c060f] transition-opacity duration-1000">
         <div class="m-c"><div class="m-l m-1"></div><div class="m-l m-2"></div></div>
         <h1 class="text-2xl mb-4 tracking-[1em] text-[#d4af37] opacity-80 uppercase">The Oracle</h1>
         <p id="tw" class="text-[7px] tracking-[0.5em] mb-12 opacity-40 uppercase min-h-[10px]"></p>
@@ -70,7 +42,6 @@
         </div>
         <button id="s-b" class="px-16 py-4 border border-[#d4af37]/30 text-[#d4af37] text-[9px] tracking-[0.6em] hover:bg-[#d4af37] hover:text-black transition-all duration-700 uppercase">Commence Ritual</button>
     </div>
-
     <div id="ui">
         <div id="cur"><div id="i-f"></div></div>
         <div id="b-k" class="p-b absolute top-10 left-10 hidden" data-url="reset"><span class="text-[9px] tracking-[0.3em]">DEPART</span><div class="l-c"><div class="l-f"></div></div></div>
@@ -80,14 +51,11 @@
             <div class="p-b" data-url="Solar.html"><h2 class="text-[10px] font-bold tracking-[0.4em]">SOLARIS</h2><div class="l-c"><div class="l-f"></div></div></div>
         </div>
     </div>
-    
     <iframe id="m-f" class="absolute inset-0 w-full h-full border-none" src="about:blank"></iframe>
-
     <script>
         const _ = (x) => document.getElementById(x);
         let _a, _o, _g, _p = 0, _v = false;
         function _s() { _a = new (window.AudioContext || window.webkitAudioContext)(); _o = _a.createOscillator(); _g = _a.createGain(); _o.type = 'sine'; _o.frequency.setValueAtTime(110, _a.currentTime); _g.gain.setValueAtTime(0, _a.currentTime); _o.connect(_g); _g.connect(_a.destination); _o.start(); }
-        
         (function() {
             const vi = _('v-in'), fr = _('m-f'), cu = _('cur'), fl = _('i-f');
             function onResults(r) {
@@ -119,31 +87,8 @@
             hnds.setOptions({maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6});
             hnds.onResults(onResults);
             const cam = new Camera(vi, {onFrame: async () => { await hnds.send({image: vi}); }, width: 1280, height: 720});
-            _('s-b').onclick = async () => { 
-    try {
-        // 1. Spustíme zvukový rituál
-        _s(); 
-        
-        // 2. Požádáme o přístup ke kameře (tohle v kódu chybělo)
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        _('v-in').srcObject = stream;
-        
-        // 3. Skryjeme úvodní obrazovku
-        _('bt').style.opacity = '0'; 
-        
-        setTimeout(() => { 
-            _('bt').style.display = 'none'; 
-            // 4. Nastartujeme sledování rukou
-            cam.start(); 
-        }, 1000);
-    } catch (err) {
-        alert("The Oracle requires a camera to function. Please enable it.");
-        console.error(err);
-    }
-};
+            _('s-b').onclick = () => { _s(); _('bt').style.opacity = '0'; setTimeout(() => { _('bt').style.display = 'none'; cam.start(); }, 1000); };
         })();
     </script>
 </body>
 </html>
-
-
