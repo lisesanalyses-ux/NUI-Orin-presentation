@@ -28,18 +28,26 @@
         #i-f { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(212, 175, 55, 0.4); }
     </style>
 </head>
-<body>
-    <div id="mobile-notice" class="md:hidden fixed inset-0 bg-[#0c060f] z-[10000] flex flex-col items-center justify-center p-6 text-center">
+<body><body>
+    <div id="mobile-notice" class="fixed inset-0 bg-[#0c060f] z-[10000] flex flex-col items-center justify-center p-6 text-center md:hidden">
         <div class="m-c">
             <div class="m-l m-1"></div>
             <div class="m-l m-2"></div>
         </div>
         
-        <img src="preview.jpg?v=5" alt="The Oracle Experience" class="w-full max-w-xs border border-[#d4af37]/30 mb-6 shadow-[0_0_20px_rgba(212,175,55,0.1)]">
+        <div class="relative w-full max-w-xs mb-6">
+            <img src="preview.jpg?v=20" alt="The Oracle Experience" 
+                 class="w-full border border-[#d4af37]/30 shadow-[0_0_20px_rgba(212,175,55,0.1)]"
+                 onerror="this.style.display='none'; document.getElementById('img-fallback').classList.remove('hidden');">
+            <div id="img-fallback" class="hidden w-full aspect-video border border-[#d4af37]/20 flex items-center justify-center text-[#d4af37] text-[10px] tracking-widest uppercase">
+                Image Not Found
+            </div>
+        </div>
         
-        <h2 class="text-[#d4af37] text-lg mb-2 tracking-[0.5em] uppercase">Desktop Required</h2>
-        <p class="text-[#fdf5e6] opacity-50 text-[10px] tracking-[0.2em] leading-relaxed mb-8">
-            THE ORACLE REQUIRES MOTION SENSORS<br>AVAILABLE ONLY ON WORKSTATIONS
+        <h2 class="text-[#d4af37] text-lg mb-2 tracking-[0.5em] uppercase font-bold">The Oracle</h2>
+        <p class="text-[#fdf5e6] opacity-60 text-[10px] tracking-[0.2em] leading-relaxed mb-8 max-w-sm">
+            DESKTOP EXPERIENCE REQUIRED<br><br>
+            To engage with the Oracle's NUI and gesture-tracking, please switch to a desktop device with a webcam.
         </p>
         
         <a href="https://auraadmin.online" class="text-[#d4af37] text-[9px] tracking-[0.4em] border border-[#d4af37]/40 px-8 py-3 uppercase hover:bg-[#d4af37] hover:text-black transition-all">
@@ -48,8 +56,10 @@
     </div>
 
     <div class="p-bg"></div>
+    
     <video id="v-in" style="display:none" playsinline></video>
-    <div id="bt" class="absolute inset-0 flex flex-col items-center justify-center z-[1000] bg-[#0c060f] transition-opacity duration-1000">
+    
+    <div id="bt" class="hidden md:flex absolute inset-0 flex-col items-center justify-center z-[1000] bg-[#0c060f] transition-opacity duration-1000">
         <div class="m-c"><div class="m-l m-1"></div><div class="m-l m-2"></div></div>
         <h1 class="text-2xl mb-4 tracking-[1em] text-[#d4af37] opacity-80 uppercase">The Oracle</h1>
         <p id="tw" class="text-[7px] tracking-[0.5em] mb-12 opacity-40 uppercase min-h-[10px]"></p>
@@ -70,6 +80,7 @@
             <div class="p-b" data-url="Solar.html"><h2 class="text-[10px] font-bold tracking-[0.4em]">SOLARIS</h2><div class="l-c"><div class="l-f"></div></div></div>
         </div>
     </div>
+    
     <iframe id="m-f" class="absolute inset-0 w-full h-full border-none" src="about:blank"></iframe>
 
     <script>
@@ -134,4 +145,5 @@
     </script>
 </body>
 </html>
+
 
