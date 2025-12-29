@@ -30,23 +30,23 @@
 </head>
 <body>
     <div id="mobile-notice" class="md:hidden fixed inset-0 bg-[#0c060f] z-[10000] flex flex-col items-center justify-center p-6 text-center">
-    <div class="m-c">
-        <div class="m-l m-1"></div>
-        <div class="m-l m-2"></div>
+        <div class="m-c">
+            <div class="m-l m-1"></div>
+            <div class="m-l m-2"></div>
+        </div>
+        
+        <img src="preview.jpg?v=5" alt="The Oracle Experience" class="w-full max-w-xs border border-[#d4af37]/30 mb-6 shadow-[0_0_20px_rgba(212,175,55,0.1)]">
+        
+        <h2 class="text-[#d4af37] text-lg mb-2 tracking-[0.5em] uppercase">Desktop Required</h2>
+        <p class="text-[#fdf5e6] opacity-50 text-[10px] tracking-[0.2em] leading-relaxed mb-8">
+            THE ORACLE REQUIRES MOTION SENSORS<br>AVAILABLE ONLY ON WORKSTATIONS
+        </p>
+        
+        <a href="https://auraadmin.online" class="text-[#d4af37] text-[9px] tracking-[0.4em] border border-[#d4af37]/40 px-8 py-3 uppercase hover:bg-[#d4af37] hover:text-black transition-all">
+            Enter the Sanctum
+        </a>
     </div>
-    
-   <img src="preview.jpg?v=3" alt="The Oracle Experience" class="w-full max-w-xs border border-[#d4af37]/30 mb-6 shadow-[0_0_20px_rgba(212,175,55,0.1)]">
-    
-    <h2 class="text-[#d4af37] text-lg mb-2 tracking-[0.5em] uppercase">Desktop Required</h2>
-    <p class="text-[#fdf5e6] opacity-50 text-[10px] tracking-[0.2em] leading-relaxed mb-8">
-        THE ORACLE REQUIRES MOTION SENSORS<br>AVAILABLE ONLY ON WORKSTATIONS
-    </p> 
-    
-    <a href="https://auraadmin.online" class="text-[#d4af37] text-[9px] tracking-[0.4em] border border-[#d4af37]/40 px-8 py-3 uppercase hover:bg-[#d4af37] hover:text-black transition-all">
-        Enter the Sanctum
-    </a>
-</div>
-    <div class="p-bg"></div>
+
     <div class="p-bg"></div>
     <video id="v-in" style="display:none" playsinline></video>
     <div id="bt" class="absolute inset-0 flex flex-col items-center justify-center z-[1000] bg-[#0c060f] transition-opacity duration-1000">
@@ -60,6 +60,7 @@
         </div>
         <button id="s-b" class="px-16 py-4 border border-[#d4af37]/30 text-[#d4af37] text-[9px] tracking-[0.6em] hover:bg-[#d4af37] hover:text-black transition-all duration-700 uppercase">Commence Ritual</button>
     </div>
+
     <div id="ui">
         <div id="cur"><div id="i-f"></div></div>
         <div id="b-k" class="p-b absolute top-10 left-10 hidden" data-url="reset"><span class="text-[9px] tracking-[0.3em]">DEPART</span><div class="l-c"><div class="l-f"></div></div></div>
@@ -70,10 +71,12 @@
         </div>
     </div>
     <iframe id="m-f" class="absolute inset-0 w-full h-full border-none" src="about:blank"></iframe>
+
     <script>
         const _ = (x) => document.getElementById(x);
         let _a, _o, _g, _p = 0, _v = false;
         function _s() { _a = new (window.AudioContext || window.webkitAudioContext)(); _o = _a.createOscillator(); _g = _a.createGain(); _o.type = 'sine'; _o.frequency.setValueAtTime(110, _a.currentTime); _g.gain.setValueAtTime(0, _a.currentTime); _o.connect(_g); _g.connect(_a.destination); _o.start(); }
+        
         (function() {
             const vi = _('v-in'), fr = _('m-f'), cu = _('cur'), fl = _('i-f');
             function onResults(r) {
@@ -109,7 +112,4 @@
         })();
     </script>
 </body>
-
 </html>
-
-
